@@ -6,6 +6,9 @@ on:
       - "dev"
       - "staging"
       - "prod"
+  pull_request:
+    branches:
+      - "main"
 
 jobs:
   terraform:
@@ -35,11 +38,11 @@ jobs:
       - name: Select Environment and Plan
         run: |
           if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
-            terraform plan -var-file="terraform.tfvars.dev"
+            terraform plan -var-file="dev.tfvars"
           elif [[ "${{ github.ref }}" == "refs/heads/staging" ]]; then
-            terraform plan -var-file="terraform.tfvars.staging"
+            terraform plan -var-file="staging.tfvars"
           elif [[ "${{ github.ref }}" == "refs/heads/prod" ]]; then
-            terraform plan -var-file="terraform.tfvars.prod"
+            terraform plan -var-file="prod.tfvars"
           else
             echo "Branch not recognized for environment"
             exit 1
@@ -50,5 +53,5 @@ jobs:
       - name: Terraform Apply
         if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/staging'
         run: |
-          terraform apply -auto-approve -var-file="terraform.tfvars.${{ github.ref_name }}"
+          terraform apply -auto-approve -var-file="${{ github.ref_name }}.tfvars"
         working-directory: ./deployments
