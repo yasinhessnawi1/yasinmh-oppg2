@@ -23,7 +23,7 @@ terraform {
 
 
 resource "azurerm_resource_group" "main" {
-  name     = "${var.environment}-${var.resource_group_name}"
+  name     = "${var.resource_group_name}-${random_string.suffix.result}"
   location = var.location
 }
 
