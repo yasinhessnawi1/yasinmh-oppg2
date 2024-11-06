@@ -6,6 +6,9 @@ on:
       - "dev"
       - "staging"
       - "prod"
+  pull_request:
+    branches:
+      - "main"
 
 jobs:
   terraform:
