@@ -1,7 +1,16 @@
 name: Terraform Destroy Workflow
 
 on:
-  workflow_dispatch: # Allows you to manually trigger the workflow
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to destroy (dev, staging, prod)"
+        required: true
+        type: choice
+        options:
+          - dev
+          - staging
+          - prod
 
 jobs:
   terraform:
