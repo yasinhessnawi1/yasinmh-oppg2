@@ -62,6 +62,7 @@ module "key_vault" {
   ]
 
   tenant_id = data.azurerm_client_config.current.tenant_id
+
 }
 
 # Optional Outputs for Debugging
