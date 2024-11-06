@@ -1,0 +1,37 @@
+name: Terraform Backend Destroy Workflow
+
+on:
+  workflow_dispatch: # Allows you to manually trigger the destroy workflow
+
+jobs:
+  destroy_backend_setup:
+    runs-on: ubuntu-latest
+
+    env:
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.0.10  # Specify your Terraform version
+
+      # Navigate to global/backend-setup and destroy
+      - name: Terraform Destroy for Backend Setup
+        working-directory: ./global/backend-setup
+        run: |
+          terraform init -var-file="../global.tfvars"
+          terraform destroy -auto-approve -var-file="../global.tfvars"
+
+      # Navigate to global directory and destroy
+      - name: Terraform Destroy for Global Setup
+        working-directory: ./global
+        run: |
+          terraform init -var-file="../global.tfvars"
+          terraform destroy -auto-approve -var-file="../global.tfvars"
