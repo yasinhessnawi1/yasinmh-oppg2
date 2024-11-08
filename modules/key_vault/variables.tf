@@ -1,7 +1,6 @@
 variable "key_vault_name" {
     description = "Name of the Azure Key Vault"
     type        = string
-    default     = "kv-operaterraas"
 }
 
 variable "resource_group_name" {
@@ -53,7 +52,6 @@ variable "access_policies" {
     }))
 }
 
-
 variable "storage_account_access_key" {
     description = "The access key for the Azure Storage Account (sensitive)"
     type        = string
@@ -63,7 +61,4 @@ variable "storage_account_access_key" {
 variable "tags" {
     description = "Tags to be applied to all resources."
     type        = map(string)
-    default     = {
-        Owner       = "OperaTerra AS"
-    }
 }

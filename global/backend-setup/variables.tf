@@ -20,7 +20,7 @@ variable "storage_container_name" {
 variable "backend_storage_name" {
     description = "The name of the storage account"
     type        = string
-  default = "backendstorageopera"
+    default = "backendstorageopera"
 }
 
 variable "subscription_id" {

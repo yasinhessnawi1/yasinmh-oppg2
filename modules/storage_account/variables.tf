@@ -1,5 +1,3 @@
-# modules/storage_account/variables.tf
-
 variable "environment" {
   description = "Deployment environment (dev, staging, prod)"
   type        = string
@@ -18,4 +16,14 @@ variable "resource_group_name" {
 variable "name" {
   description = "The name for the storage account, must be globally unique"
   type        = string
+}
+
+variable "blob_container_name" {
+  description = "The name of the blob container"
+  type        = string
+}
+
+variable "tags" {
+  description = "Tags to assign to the storage account and container"
+  type        = map(string)
 }

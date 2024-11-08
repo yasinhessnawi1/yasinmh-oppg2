@@ -5,5 +5,5 @@ output "resource_group_name" {
 
 output "location" {
   description = "The region where resources are deployed"
-  value       = var.location
+  value       = azurerm_resource_group.main.location
 }

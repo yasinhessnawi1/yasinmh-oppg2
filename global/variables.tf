@@ -1,38 +1,30 @@
-# variables.tf
-variable "location" {
-  description = "The Azure region to deploy resources in"
-  type        = string
-  default     = "westeurope"
-}
 
-variable "resource_group_name" {
-  description = "The name of the resource group"
+variable "environment" {
+  description = "The environment to deploy to (e.g., dev, staging, prod)"
   type        = string
 }
-
-resource "random_string" "suffix" {
-  length  = 4
-  special = false
-}
-
 
 variable "backend_resource_group_name" {
-    description = "The name of the resource group for the backend storage account"
-    type        = string
-}
-
-variable "backend_container_name" {
-    description = "The name of the storage container"
-    type        = string
-    default     = "tfstate"
+  description = "The name of the resource group for the backend storage account"
+  type        = string
 }
 
 variable "backend_storage_account_name" {
-    description = "The name of the storage account"
-    type        = string
+  description = "The name of the storage account for the backend"
+  type        = string
 }
 
-variable "subscription_id" {
-    description = "The subscription ID"
-    type        = string
+variable "backend_container_name" {
+  description = "The name of the storage container for the backend"
+  type        = string
+  default     = "tfstate"
+}
+
+variable "default_tags" {
+  description = "Default tags to apply to resources"
+  type        = map(string)
+  default     = {
+    Owner     = "OperaTerra AS"
+    ManagedBy = "Terraform"
+  }
 }
