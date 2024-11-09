@@ -18,6 +18,7 @@ resource "azurerm_storage_account" "backend_storage" {
   location                 = azurerm_resource_group.backend_rg.location
   account_tier             = "Standard"
   account_replication_type = "LRS" # Locally redundant storage
+  min_tls_version          = "TLS1_2"
 }
 
 # Container within the storage account for the state file

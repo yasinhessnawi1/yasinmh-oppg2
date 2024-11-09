@@ -13,8 +13,9 @@ resource "azurerm_mssql_server" "sql_server" {
   # Admin login credentials for managing the SQL Server
   administrator_login          = var.administrator_login
   administrator_login_password = var.administrator_password
+  public_network_access_enabled    = false
+  minimum_tls_version = "1.2"                         # Tags for resource organization and metadata
 
-  # Tags for resource organization and metadata
   tags = var.tags
 }
 

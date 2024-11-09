@@ -5,7 +5,7 @@ resource "azurerm_storage_account" "storage" {
   location                 = var.location                    # Specifies the deployment region
   account_tier             = "Standard"                      # Sets the performance tier (Standard or Premium)
   account_replication_type = "LRS"                           # Local Redundant Storage (LRS) for data redundancy
-
+  min_tls_version          = "TLS1_2"                        # Specifies the minimum TLS version for secure connections
   tags = var.tags # Applies tags for better management and organization
 }
 

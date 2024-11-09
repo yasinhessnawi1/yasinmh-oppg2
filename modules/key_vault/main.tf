@@ -32,6 +32,7 @@ resource "azurerm_key_vault_secret" "storage_account_key" {
   name         = "storage-account-key"          # Name of the secret in the Key Vault
   value        = var.storage_account_access_key # Value of the storage account access key to be stored
   key_vault_id = azurerm_key_vault.key_vault.id # Reference to the Key Vault ID
+  content_type = "storageAccountKey"           # Specifies the content type for the secret
 
   lifecycle {
     prevent_destroy = false # Allows the secret to be destroyed during deletion
@@ -43,7 +44,7 @@ resource "azurerm_key_vault_secret" "sql_admin_password" {
   name         = "sql-admin-login-password"     # Name of the secret in the Key Vault
   value        = var.sql_admin_password         # Value of the SQL admin password to be stored
   key_vault_id = azurerm_key_vault.key_vault.id # Reference to the Key Vault ID
-
+  content_type = "password"                    # Specifies the content type for the secret
   lifecycle {
     prevent_destroy = false # Allows the secret to be destroyed during deletion
   }
@@ -55,6 +56,7 @@ resource "azurerm_key_vault_secret" "sql_admin_login" {
   value        = var.sql_admin_login            # Value of the SQL admin login to be stored
   key_vault_id = azurerm_key_vault.key_vault.id # Reference to the Key Vault ID
 
+  content_type = "username"                    # Specifies the content type for the secret
   lifecycle {
     prevent_destroy = false # Allows the secret to be destroyed during deletion
   }
