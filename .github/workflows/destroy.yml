@@ -30,9 +30,9 @@ jobs:
         uses: hashicorp/setup-terraform@v2
 
       - name: Initialize Terraform
-        run: terraform init -backend-config="key=deployments/${{ github.event.inputs.environment }}.tfstate"
+        run: terraform init -backend-config="backend.${{ github.event.inputs.environment }}.conf"
         working-directory: ./deployments
 
       - name: Destroy Terraform Resources
-        run: terraform destroy -auto-approve -var-file="terraform.${{ github.event.inputs.environment }}.tfvars"
+        run: terraform destroy -auto-approve -var-file="${{ github.event.inputs.environment }}.tfvars"
         working-directory: ./deployments

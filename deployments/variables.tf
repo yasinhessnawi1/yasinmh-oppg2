@@ -39,7 +39,8 @@ variable "default_tags" {
     }
 }
 
-variable "resource_group_name" {
-    description = "The name of the resource group"
-    type        = string
+variable "max_size_gb" {
+    description = "The maximum size of the database in gigabytes"
+    type        = number
+    default     = 2
 }

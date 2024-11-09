@@ -8,7 +8,7 @@ variable "location" {
 variable "resource_group_name" {
   description = "The name of the resource group"
   type        = string
-  default = "rg-opera-terraform-state"
+  default = "rg-opera-backend-state"
 }
 
 variable "storage_container_name" {

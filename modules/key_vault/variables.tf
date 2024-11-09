@@ -13,10 +13,6 @@ variable "location" {
     type        = string
 }
 
-variable "environment" {
-    description = "The environment for the resources"
-    type        = string
-}
 
 variable "tenant_id" {
     description = "Azure Active Directory tenant ID for Key Vault"
@@ -61,4 +57,16 @@ variable "storage_account_access_key" {
 variable "tags" {
     description = "Tags to be applied to all resources."
     type        = map(string)
+}
+
+variable "sql_admin_password" {
+    description = "The password for the SQL Server admin account (sensitive)"
+    type        = string
+    sensitive   = true
+}
+
+variable "sql_admin_login" {
+    description = "The login for the SQL Server admin account"
+    type        = string
+    sensitive = true
 }

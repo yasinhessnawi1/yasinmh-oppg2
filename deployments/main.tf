@@ -1,7 +1,12 @@
 # deployments/main.tf
 
 terraform {
-  required_version = ">= 0.14"
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~> 4.2.0"
+    }
+  }
 
   backend "azurerm" {
     # Backend configuration will be supplied via -backend-config during terraform init
@@ -17,15 +22,16 @@ provider "azurerm" {
 data "terraform_remote_state" "global" {
   backend = "azurerm"
   config = {
-    resource_group_name  = var.backend_resource_group_name
-    storage_account_name = var.backend_storage_account_name
-    container_name       = var.backend_container_name
-    key                  = "global/${var.environment}.tfstate"
+    resource_group_name  = "rg-opera-terraform-state"
+    storage_account_name = "backendstorageopera"
+    container_name       = "tfstate"
+    key                  = "global/terraform.tfstate"
   }
 }
 
 # Fetch current client configuration
 data "azurerm_client_config" "current" {}
+# Retrieve the SQL admin login and password from Key Vault
 
 # Random suffix for unique naming
 resource "random_string" "suffix" {
@@ -35,10 +41,23 @@ resource "random_string" "suffix" {
   numeric = true
 }
 
+resource "random_string" "sql_admin_login" {
+  length           = 10
+  special          = false
+  upper            = false
+  lower            = true
+}
+resource "random_password" "sql_admin_password" {
+  length           = 16
+  special          = true
+  override_special = "!@#$%^&*()-_=+[]{}<>"
+}
+
 # Locals for environment-specific customization
 locals {
   # Adjust SKU names based on environment
-  sku_name = var.environment == "prod" ? "S1" : "B1"
+  sku_name_service_plan = var.environment == "prod" ? "S1" : "B1"
+    sku_name_sql_db       = var.environment == "prod" ? "S0" : "Basic"
   tags     = merge(var.default_tags, { "Environment" = var.environment })
 }
 
@@ -68,8 +87,10 @@ module "key_vault" {
   environment                = var.environment
   location                   = data.terraform_remote_state.global.outputs.location
   resource_group_name        = data.terraform_remote_state.global.outputs.resource_group_name
-  key_vault_name             = "kv-${var.environment}-${random_string.suffix.result}"
+  key_vault_name             = "${var.environment}-kv-${random_string.suffix.result}"
   storage_account_access_key = module.storage.storage_account_access_key
+  sql_admin_login = random_string.sql_admin_login.result
+  sql_admin_password = random_password.sql_admin_password.result
   access_policies            = [
     {
       tenant_id           = data.azurerm_client_config.current.tenant_id
@@ -90,19 +111,18 @@ module "app_service_plan" {
   location                  = data.terraform_remote_state.global.outputs.location
   resource_group_name       = data.terraform_remote_state.global.outputs.resource_group_name
   website_service_plan_name = "webapp-plan-${random_string.suffix.result}"
-  sku_name                  = local.sku_name
+  sku_name                  = local.sku_name_service_plan
   tags                      = local.tags
 }
 
-# Retrieve the SQL admin login and password from Key Vault
-data "azurerm_key_vault_secret" "sql_admin_login" {
-  name         = "sql-admin-login"
-  key_vault_id = module.key_vault.key_vault_id
-}
 
-data "azurerm_key_vault_secret" "sql_admin_password" {
-  name         = "sql-admin-login-password"
-  key_vault_id = module.key_vault.key_vault_id
+# Load Balancer Module
+module "load_balancer" {
+  source              = "../modules/load_balancer"
+  environment         = var.environment
+  location            = data.terraform_remote_state.global.outputs.location
+  resource_group_name = data.terraform_remote_state.global.outputs.resource_group_name
+  tags                = local.tags
 }
 
 # SQL Database Module
@@ -113,17 +133,9 @@ module "sql_database" {
   resource_group_name     = data.terraform_remote_state.global.outputs.resource_group_name
   sql_server_name         = "sqlserver-${random_string.suffix.result}"
   sql_database_name       = "productdb-${random_string.suffix.result}"
-  administrator_login     = data.azurerm_key_vault_secret.sql_admin_login.value
-  administrator_password  = data.azurerm_key_vault_secret.sql_admin_password.value
-  sku_name                = local.sku_name
+  administrator_login     = random_string.sql_admin_login.result
+  administrator_password  = random_password.sql_admin_password.result
+  sku_name                = local.sku_name_sql_db
   tags                    = local.tags
-}
-
-# Load Balancer Module
-module "load_balancer" {
-  source              = "../modules/load_balancer"
-  environment         = var.environment
-  location            = data.terraform_remote_state.global.outputs.location
-  resource_group_name = data.terraform_remote_state.global.outputs.resource_group_name
-  tags                = local.tags
+  max_size_gb =             var.max_size_gb
 }

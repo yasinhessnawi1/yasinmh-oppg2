@@ -10,8 +10,16 @@ on:
 jobs:
   deploy:
     name: 'Terraform Deploy'
+    if: github.ref_name != 'prod'
     runs-on: ubuntu-latest
     environment: ${{ github.ref_name }}
+
+    env:
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+
     steps:
       - uses: actions/checkout@v3
 
@@ -19,39 +27,44 @@ jobs:
         uses: hashicorp/setup-terraform@v2
 
       - name: 'Terraform Init'
-        run: terraform init -backend-config="key=terraform.${{ github.ref_name }}.tfstate"
+        run: terraform init -backend-config="backend.${{ github.ref_name }}.conf"
 
       - name: 'Terraform Plan'
-        run: terraform plan -var-file="terraform.${{ github.ref_name }}.tfvars"
+        run: terraform plan -var-file="${{ github.ref_name }}.tfvars"
 
       - name: 'Terraform Apply'
-        if: github.ref_name != 'prod' || (github.ref_name == 'prod' && github.event_name == 'workflow_dispatch')
-        run: terraform apply -auto-approve -var-file="terraform.${{ github.ref_name }}.tfvars"
+        run: terraform apply -auto-approve -var-file="${{ github.ref_name }}.tfvars"
 
-    # For production, require manual approval
   deploy_prod:
-    needs: deploy
+    name: 'Terraform Deploy to Production'
     if: github.ref_name == 'prod'
     runs-on: ubuntu-latest
-    environment:
-      name: production
-      url: ${{ steps.deploy.outputs.url }}
-    steps:
-      - name: 'Awaiting Manual Approval'
-        uses: hmarr/auto-approve-action@v2
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+    environment: production
 
+    env:
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+
+    steps:
       - uses: actions/checkout@v3
 
       - name: 'Set up Terraform'
         uses: hashicorp/setup-terraform@v2
 
       - name: 'Terraform Init'
-        run: terraform init -backend-config="key=deployments/prod.tfstate"
+        run: terraform init -backend-config="backend.prod.conf"
 
       - name: 'Terraform Plan'
-        run: terraform plan -var-file="terraform.prod.tfvars"
+        run: terraform plan -var-file="prod.tfvars"
+
+      - name: 'Awaiting Manual Approval'
+        uses: peter-evans/enable-pull-request-automerge@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          message: 'Awaiting manual approval to deploy to production.'
+          pull-request-number: ''
 
       - name: 'Terraform Apply'
-        run: terraform apply -auto-approve -var-file="terraform.prod.tfvars"
+        run: terraform apply -auto-approve -var-file="prod.tfvars"
