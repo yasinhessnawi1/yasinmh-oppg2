@@ -1,46 +1,46 @@
 variable "environment" {
-    description = "The environment to deploy to (e.g., dev, staging, prod)"
-    type        = string
+  description = "The environment to deploy to (e.g., dev, staging, prod)"
+  type        = string
 }
 
 variable "subscription_id" {
-    description = "The subscription ID"
-    type        = string
+  description = "The subscription ID"
+  type        = string
 }
 
 variable "backend_resource_group_name" {
-    description = "The name of the resource group for the backend storage account"
-    type        = string
+  description = "The name of the resource group for the backend storage account"
+  type        = string
 }
 
 variable "backend_storage_account_name" {
-    description = "The name of the storage account for the backend"
-    type        = string
+  description = "The name of the storage account for the backend"
+  type        = string
 }
 
 variable "backend_container_name" {
-    description = "The name of the storage container for the backend"
-    type        = string
-    default     = "tfstate"
+  description = "The name of the storage container for the backend"
+  type        = string
+  default     = "tfstate"
 }
 
 variable "blob_container_name" {
-    description = "The name of the blob container"
-    type        = string
-    default     = "blob-container-data-storage"
+  description = "The name of the blob container"
+  type        = string
+  default     = "blob-container-data-storage"
 }
 
 variable "default_tags" {
-    description = "Default tags to apply to resources"
-    type        = map(string)
-    default     = {
-        Owner     = "OperaTerra AS"
-        ManagedBy = "Terraform"
-    }
+  description = "Default tags to apply to resources"
+  type        = map(string)
+  default = {
+    Owner     = "OperaTerra AS"
+    ManagedBy = "Terraform"
+  }
 }
 
 variable "max_size_gb" {
-    description = "The maximum size of the database in gigabytes"
-    type        = number
-    default     = 2
+  description = "The maximum size of the database in gigabytes"
+  type        = number
+  default     = 2
 }

@@ -42,10 +42,10 @@ resource "random_string" "suffix" {
 }
 
 resource "random_string" "sql_admin_login" {
-  length           = 10
-  special          = false
-  upper            = false
-  lower            = true
+  length  = 10
+  special = false
+  upper   = false
+  lower   = true
 }
 resource "random_password" "sql_admin_password" {
   length           = 16
@@ -57,8 +57,8 @@ resource "random_password" "sql_admin_password" {
 locals {
   # Adjust SKU names based on environment
   sku_name_service_plan = var.environment == "prod" ? "S1" : "B1"
-    sku_name_sql_db       = var.environment == "prod" ? "S0" : "Basic"
-  tags     = merge(var.default_tags, { "Environment" = var.environment })
+  sku_name_sql_db       = var.environment == "prod" ? "S0" : "Basic"
+  tags                  = merge(var.default_tags, { "Environment" = var.environment })
 }
 
 # Network Module
@@ -72,13 +72,13 @@ module "network" {
 
 # Storage Module with random name generation
 module "storage" {
-  source               = "../modules/storage_account"
-  environment          = var.environment
-  location             = data.terraform_remote_state.global.outputs.location
-  resource_group_name  = data.terraform_remote_state.global.outputs.resource_group_name
-  name                 = "storage${random_string.suffix.result}"
-  blob_container_name  = var.blob_container_name
-  tags                 = local.tags
+  source              = "../modules/storage_account"
+  environment         = var.environment
+  location            = data.terraform_remote_state.global.outputs.location
+  resource_group_name = data.terraform_remote_state.global.outputs.resource_group_name
+  name                = "storage${random_string.suffix.result}"
+  blob_container_name = var.blob_container_name
+  tags                = local.tags
 }
 
 # Key Vault Module
@@ -88,9 +88,9 @@ module "key_vault" {
   resource_group_name        = data.terraform_remote_state.global.outputs.resource_group_name
   key_vault_name             = "${var.environment}-kv-${random_string.suffix.result}"
   storage_account_access_key = module.storage.storage_account_access_key
-  sql_admin_login = random_string.sql_admin_login.result
-  sql_admin_password = random_password.sql_admin_password.result
-  access_policies            = [
+  sql_admin_login            = random_string.sql_admin_login.result
+  sql_admin_password         = random_password.sql_admin_password.result
+  access_policies = [
     {
       tenant_id           = data.azurerm_client_config.current.tenant_id
       object_id           = data.azurerm_client_config.current.object_id
@@ -99,8 +99,8 @@ module "key_vault" {
       storage_permissions = ["Get", "List", "Delete", "Set", "Update"]
     }
   ]
-  tenant_id                  = data.azurerm_client_config.current.tenant_id
-  tags                       = local.tags
+  tenant_id = data.azurerm_client_config.current.tenant_id
+  tags      = local.tags
 }
 
 # App Service Plan Module
@@ -126,15 +126,15 @@ module "load_balancer" {
 
 # SQL Database Module
 module "sql_database" {
-  source                  = "../modules/sql_database"
-  environment             = var.environment
-  location                = data.terraform_remote_state.global.outputs.location
-  resource_group_name     = data.terraform_remote_state.global.outputs.resource_group_name
-  sql_server_name         = "sqlserver-${random_string.suffix.result}"
-  sql_database_name       = "productdb-${random_string.suffix.result}"
-  administrator_login     = random_string.sql_admin_login.result
-  administrator_password  = random_password.sql_admin_password.result
-  sku_name                = local.sku_name_sql_db
-  tags                    = local.tags
-  max_size_gb =             var.max_size_gb
+  source                 = "../modules/sql_database"
+  environment            = var.environment
+  location               = data.terraform_remote_state.global.outputs.location
+  resource_group_name    = data.terraform_remote_state.global.outputs.resource_group_name
+  sql_server_name        = "sqlserver-${random_string.suffix.result}"
+  sql_database_name      = "productdb-${random_string.suffix.result}"
+  administrator_login    = random_string.sql_admin_login.result
+  administrator_password = random_password.sql_admin_password.result
+  sku_name               = local.sku_name_sql_db
+  tags                   = local.tags
+  max_size_gb            = var.max_size_gb
 }

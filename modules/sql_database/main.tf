@@ -14,10 +14,10 @@ resource "azurerm_mssql_server" "sql_server" {
 
 # SQL Database
 resource "azurerm_mssql_database" "sql_database" {
-  name                = "${var.environment}-${var.sql_database_name}"
-  server_id = azurerm_mssql_server.sql_server.id
-  max_size_gb         = var.max_size_gb
-  sku_name            = var.sku_name
+  name         = "${var.environment}-${var.sql_database_name}"
+  server_id    = azurerm_mssql_server.sql_server.id
+  max_size_gb  = var.max_size_gb
+  sku_name     = var.sku_name
   collation    = "SQL_Latin1_General_CP1_CI_AS"
   license_type = "LicenseIncluded"
   enclave_type = "VBS"

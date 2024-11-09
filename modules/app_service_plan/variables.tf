@@ -20,8 +20,8 @@ variable "website_service_plan_name" {
 }
 
 variable "sku_name" {
-    description = "SKU for the website Service Plan"
-    type        = string
+  description = "SKU for the website Service Plan"
+  type        = string
 }
 
 

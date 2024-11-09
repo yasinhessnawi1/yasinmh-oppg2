@@ -10,7 +10,7 @@ resource "azurerm_resource_group" "backend_rg" {
 }
 
 resource "azurerm_storage_account" "backend_storage" {
-  name                     = var.backend_storage_name  # Globally unique name
+  name                     = var.backend_storage_name # Globally unique name
   resource_group_name      = azurerm_resource_group.backend_rg.name
   location                 = azurerm_resource_group.backend_rg.location
   account_tier             = "Standard"
@@ -19,6 +19,6 @@ resource "azurerm_storage_account" "backend_storage" {
 
 resource "azurerm_storage_container" "tfstate" {
   name                  = var.storage_container_name
-  storage_account_id  = azurerm_storage_account.backend_storage.id
+  storage_account_id    = azurerm_storage_account.backend_storage.id
   container_access_type = "private"
 }
