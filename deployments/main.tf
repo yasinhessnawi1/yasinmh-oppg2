@@ -38,7 +38,7 @@ resource "random_string" "suffix" {
   length  = 6
   special = false
   upper   = false
-  numeric = true
+  numeric = false
 }
 
 resource "random_string" "sql_admin_login" {
