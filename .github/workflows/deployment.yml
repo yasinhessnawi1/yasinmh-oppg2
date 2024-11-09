@@ -12,7 +12,7 @@ jobs:
     name: 'Terraform Deploy'
     if: github.ref_name != 'prod'
     runs-on: ubuntu-latest
-    environment: ${{ github.ref_name }}
+    environment: ${{ github.ref_name }}  # Use dynamic environments for non-prod branches
 
     env:
       ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
@@ -39,7 +39,8 @@ jobs:
     name: 'Terraform Deploy to Production'
     if: github.ref_name == 'prod'
     runs-on: ubuntu-latest
-    environment: production
+    environment:
+      name: production
 
     env:
       ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
@@ -59,12 +60,7 @@ jobs:
       - name: 'Terraform Plan'
         run: terraform plan -var-file="prod.tfvars"
 
-      - name: 'Awaiting Manual Approval'
-        uses: peter-evans/enable-pull-request-automerge@v2
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          message: 'Awaiting manual approval to deploy to production.'
-          pull-request-number: ''
+          # This step will pause until manual approval is given due to environment protection rules
 
       - name: 'Terraform Apply'
         run: terraform apply -auto-approve -var-file="prod.tfvars"

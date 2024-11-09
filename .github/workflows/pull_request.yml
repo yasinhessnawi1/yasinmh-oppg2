@@ -26,6 +26,10 @@ jobs:
 
       - name: 'Terraform Lint'
         uses: terraform-linters/tflint-action@v3.6.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 'Terraform Security Scan'
         uses: aquasecurity/tfsec-action@v1.4.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
