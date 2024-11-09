@@ -8,7 +8,7 @@ variable "location" {
 variable "resource_group_name" {
   description = "The name of the resource group"
   type        = string
-  default = "rg-opera-terraform-state"
+  default     = "rg-opera-backend-state"
 }
 
 variable "storage_container_name" {
@@ -18,12 +18,12 @@ variable "storage_container_name" {
 }
 
 variable "backend_storage_name" {
-    description = "The name of the storage account"
-    type        = string
-  default = "backendstorageopera"
+  description = "The name of the storage account"
+  type        = string
+  default     = "backendstorageopera"
 }
 
 variable "subscription_id" {
-    description = "The subscription ID"
-    type        = string
+  description = "The subscription ID"
+  type        = string
 }

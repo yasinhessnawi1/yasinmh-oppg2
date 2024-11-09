@@ -1,19 +1,16 @@
-# network module variables
 variable "environment" {
   description = "Deployment environment (dev, staging, prod)"
   type        = string
 }
 
 variable "resource_group_name" {
-    description = "The name of the resource group"
-    type        = string
+  description = "The name of the resource group"
+  type        = string
 }
-
 
 variable "location" {
   description = "The Azure region for resource deployment"
   type        = string
-  default     = "westeurope"
 }
 
 variable "vnet_name" {
@@ -22,15 +19,16 @@ variable "vnet_name" {
   default     = "vnet-operaterraas"
 }
 
-variable "app_subnet_name" {
+variable "website_subnet_name" {
   description = "The name of the subnet used for the application"
   type        = string
-  default     = "app_subnet-operaterraas"
+  default     = "app-subnet"
 }
+
 variable "db_subnet_name" {
   description = "The name of the subnet used for the database"
   type        = string
-  default     = "db_subnet-operaterraas"
+  default     = "db-subnet"
 }
 
 variable "address_space" {
@@ -39,8 +37,8 @@ variable "address_space" {
   default     = ["10.0.0.0/16"]
 }
 
-variable "app_subnet_prefix" {
-  description = "The address prefix for the app service subnet"
+variable "website_subnet_prefix" {
+  description = "The address prefix for the website service subnet"
   type        = list(string)
   default     = ["10.0.1.0/24"]
 }
@@ -88,14 +86,4 @@ variable "security_rules" {
 variable "tags" {
   description = "Tags to be applied to all resources"
   type        = map(string)
-  default     = {
-    Owner       = "OperaTerra AS"
-    ManagedBy   = "Terraform"
-  }
-}
-
-resource "random_string" "suffix" {
-  length  = 8
-  special = false
-  upper   = false
 }

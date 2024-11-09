@@ -1,4 +1,3 @@
-# modules/storage_account/main.tf
 
 resource "azurerm_storage_account" "storage" {
   name                     = "${var.environment}${var.name}"
@@ -7,13 +6,11 @@ resource "azurerm_storage_account" "storage" {
   account_tier             = "Standard"
   account_replication_type = "LRS"
 
-  tags = {
-    environment = var.environment
-  }
+  tags = var.tags
 }
 
-resource "azurerm_storage_container" "tfstate" {
-  name                  = "tfstate"
+resource "azurerm_storage_container" "blob_container" {
+  name                  = var.blob_container_name
   storage_account_name  = azurerm_storage_account.storage.name
   container_access_type = "private"
 }

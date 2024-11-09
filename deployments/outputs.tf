@@ -5,8 +5,8 @@ output "storage_account_name" {
 output "vnet_id" {
   value = module.network.vnet_id
 }
-output "app_subnet_id" {
-  value = module.network.app_subnet_id
+output "website_subnet_id" {
+  value = module.network.website_subnet_id
 }
 output "db_subnet_id" {
   value = module.network.db_subnet_id

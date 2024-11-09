@@ -24,27 +24,15 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
-        with:
-          terraform_version: 1.0.10  # Adjust to your Terraform version if needed
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
 
       - name: Initialize Terraform
-        run: terraform init
+        run: terraform init -backend-config="backend.${{ github.event.inputs.environment }}.conf"
         working-directory: ./deployments
 
-      - name: Select Environment and Destroy
-        run: |
-          if [[ "${{ github.event.inputs.environment }}" == "dev" ]]; then
-            terraform destroy -auto-approve -var-file="dev.tfvars"
-          elif [[ "${{ github.event.inputs.environment }}" == "staging" ]]; then
-            terraform destroy -auto-approve -var-file="staging.tfvars"
-          elif [[ "${{ github.event.inputs.environment }}" == "prod" ]]; then
-            terraform destroy -auto-approve -var-file="prod.tfvars"
-          else
-            echo "Environment not recognized"
-            exit 1
-          fi
+      - name: Destroy Terraform Resources
+        run: terraform destroy -auto-approve -var-file="${{ github.event.inputs.environment }}.tfvars"
         working-directory: ./deployments

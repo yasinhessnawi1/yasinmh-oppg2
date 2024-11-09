@@ -3,9 +3,9 @@ output "vnet_id" {
   value       = azurerm_virtual_network.vnet.id
 }
 
-output "app_subnet_id" {
-  description = "The ID of the App Service Subnet"
-  value       = azurerm_subnet.app_subnet.id
+output "website_subnet_id" {
+  description = "The ID of the website Service Subnet"
+  value       = azurerm_subnet.website_subnet.id
 }
 
 output "db_subnet_id" {

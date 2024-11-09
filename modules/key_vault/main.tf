@@ -1,5 +1,4 @@
-# Data source to get current Azure client configuration
-data "azurerm_client_config" "current" {}
+# key_vault/main.tf
 
 # Creates the key vault resource
 resource "azurerm_key_vault" "key_vault" {
@@ -23,13 +22,33 @@ resource "azurerm_key_vault" "key_vault" {
     }
   }
 
-  tags = merge(var.tags , { "environment" = var.environment })
+  tags = var.tags
 }
 
 # Creates a key vault secret for the storage account key
 resource "azurerm_key_vault_secret" "storage_account_key" {
   name         = "storage-account-key"
   value        = var.storage_account_access_key
+  key_vault_id = azurerm_key_vault.key_vault.id
+
+  lifecycle {
+    prevent_destroy = false
+  }
+}
+
+resource "azurerm_key_vault_secret" "sql_admin_password" {
+  name         = "sql-admin-login-password"
+  value        = var.sql_admin_password
+  key_vault_id = azurerm_key_vault.key_vault.id
+
+  lifecycle {
+    prevent_destroy = false
+  }
+}
+
+resource "azurerm_key_vault_secret" "sql_admin_login" {
+  name         = "sql-admin-login"
+  value        = var.sql_admin_login
   key_vault_id = azurerm_key_vault.key_vault.id
 
   lifecycle {
