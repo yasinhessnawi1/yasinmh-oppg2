@@ -92,7 +92,7 @@ I are using an Azure Storage Account to store Terraform state files remotely. Th
 
 - Terraform Format Check: Ensures code is properly formatted.
 - Terraform Validate: Checks the syntax and configuration of the Terraform files.
-- Terraform Linting: Uses tools like tflint and tfsec to identify potential issues or security vulnerabilities.
+- Terraform Linting: Uses tools like tflint and tfsec(Trivy) to identify potential issues or security vulnerabilities.
   These checks are triggered via Pull Requests, enforcing code reviews and quality assurance before changes are deployed.
 ### Automated Deployments
 Merging changes into the dev or staging branches automatically triggers a workflow that plans and applies the
