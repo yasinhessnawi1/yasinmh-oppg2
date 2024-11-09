@@ -24,12 +24,14 @@ jobs:
       - name: 'Terraform Validate'
         run: terraform validate
 
-      - name: 'Terraform Lint'
-        uses: terraform-linters/tflint-action@v3.6.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: 'Set up TFLint'
+        uses: terraform-linters/setup-tflint@v1
+        with:
+          tflint_version: v0.46.0  # Specify the version of TFLint you want to use
 
-      - name: 'Terraform Security Scan'
-        uses: aquasecurity/tfsec-action@v1.4.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: 'Trivy Scan'
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: "config"
+          severity: "HIGH,CRITICAL"
+          scan-ref: "."
