@@ -84,7 +84,6 @@ module "storage" {
 # Key Vault Module
 module "key_vault" {
   source                     = "../modules/key_vault"
-  environment                = var.environment
   location                   = data.terraform_remote_state.global.outputs.location
   resource_group_name        = data.terraform_remote_state.global.outputs.resource_group_name
   key_vault_name             = "${var.environment}-kv-${random_string.suffix.result}"
