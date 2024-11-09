@@ -36,8 +36,6 @@ resource "azurerm_key_vault_secret" "storage_account_key" {
   }
 }
 
-
-
 resource "azurerm_key_vault_secret" "sql_admin_password" {
   name         = "sql-admin-login-password"
   value        = var.sql_admin_password
@@ -47,8 +45,6 @@ resource "azurerm_key_vault_secret" "sql_admin_password" {
     prevent_destroy = false
   }
 }
-
-
 
 resource "azurerm_key_vault_secret" "sql_admin_login" {
   name         = "sql-admin-login"
