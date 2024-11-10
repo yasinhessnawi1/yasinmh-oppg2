@@ -1,6 +1,5 @@
 # network module for creating virtual network, subnets, and network security group(mostly reused from previous assignment)
 # Local variables for commonly used values
-# Using local variables to simplify references and avoid repeating long variable calls
 locals {
   rg_name  = var.resource_group_name # The name of the resource group to deploy resources
   location = var.location            # Azure region where resources will be deployed
@@ -40,15 +39,15 @@ resource "azurerm_network_security_group" "nsg" {
   }
 }
 
-# Associating the NSG with the website subnet
+# Associating the NSG with the webapp subnet
 resource "azurerm_subnet_network_security_group_association" "nsg_subnet_assoc" {
-  subnet_id                 = azurerm_subnet.website_subnet.id      # ID of the website subnet
+  subnet_id                 = azurerm_subnet.webapp_subnet.id       # ID of the webapp subnet
   network_security_group_id = azurerm_network_security_group.nsg.id # ID of the created NSG
 }
 
-# Subnet creation for the website service
-resource "azurerm_subnet" "website_subnet" {
-  name                 = "${var.environment}-${var.website_subnet_name}" # Unique name for the website subnet
+# Subnet creation for the webapp service
+resource "azurerm_subnet" "webapp_subnet" {
+  name                 = "${var.environment}-${var.website_subnet_name}" # Unique name for the webapp subnet
   resource_group_name  = local.rg_name                                   # References the resource group from local variables
   virtual_network_name = azurerm_virtual_network.vnet.name               # Associates the subnet with the created VNet
   address_prefixes     = var.website_subnet_prefix                       # CIDR block defining the address space for the subnet

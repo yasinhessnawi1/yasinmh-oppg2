@@ -16,20 +16,27 @@ variable "resource_group_name" {
   type        = string
 }
 
-# Name assigned to the website Service Plan, used for creating a unique resource identifier.
-variable "website_service_plan_name" {
-  description = "Name of the website Service Plan"
+# Name assigned to the webapp Service Plan, used for creating a unique resource identifier.
+variable "webapp_service_plan_name" {
+  description = "Name of the webapp Service Plan"
   type        = string
 }
 
 # The SKU (pricing tier) for the Service Plan, allowing specification of different performance and cost tiers.
 variable "sku_name" {
-  description = "SKU for the website Service Plan"
+  description = "SKU for the webapp Service Plan"
   type        = string
 }
 
 # Tags to categorize and manage the Service Plan. This helps in organizing resources and tracking related costs.
 variable "tags" {
-  description = "Tags to assign to the website Service Plan"
+  description = "Tags to assign to the webapp Service Plan"
   type        = map(string)
+}
+
+# Name of the web app to be created within the Service Plan.
+variable "web_app_name" {
+  description = "Name of the web app"
+  type        = string
+  default     = "opperatera-webapp"
 }

@@ -4,10 +4,10 @@ output "vnet_id" {
   value       = azurerm_virtual_network.vnet.id # Outputs the ID of the created Virtual Network
 }
 
-# Output to expose the ID of the website subnet
-output "website_subnet_id" {
-  description = "The ID of the website Service Subnet"
-  value       = azurerm_subnet.website_subnet.id # Outputs the ID of the created website subnet
+# Output to expose the ID of the webapp subnet
+output "webapp_subnet_id" {
+  description = "The ID of the webapp Service Subnet"
+  value       = azurerm_subnet.webapp_subnet.id # Outputs the ID of the created webapp subnet
 }
 
 # Output to expose the ID of the database subnet

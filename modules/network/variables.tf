@@ -46,7 +46,7 @@ variable "address_space" {
 
 # Variable for the address prefix of the web application subnet
 variable "website_subnet_prefix" {
-  description = "The address prefix for the website service subnet"
+  description = "The address prefix for the webapp service subnet"
   type        = list(string)
   default     = ["10.0.1.0/24"] # Default CIDR block for the web application subnet
 }
