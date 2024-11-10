@@ -139,6 +139,7 @@ This adds an extra layer of security, ensuring that critical changes are reviewe
     ```
     terraform init
     ```
+   (add -reconfigure if you have already initialized the configuration)
 3. Apply the Deployment:
     ```
     terraform apply -var-file="global.tfvars"
@@ -159,7 +160,7 @@ This adds an extra layer of security, ensuring that critical changes are reviewe
 #### Development Environment
 1. Initialize the Terraform Configuration:
     ```
-    terraform init -backend-config="dev.backend.tfvars"
+    terraform init -backend-config="backend.dev.conf"
     ``` 
 2. Plan the Deployment:
     ```
@@ -172,7 +173,7 @@ This adds an extra layer of security, ensuring that critical changes are reviewe
 #### Staging Environment
 1. Initialize the Terraform Configuration:
     ```
-    terraform init -backend-config="staging.backend.tfvars"
+    terraform init -backend-config="backend.staging.conf"
     ```
 2. Plan the Deployment:
     ```
@@ -185,7 +186,7 @@ This adds an extra layer of security, ensuring that critical changes are reviewe
 #### Production Environment
 1. Initialize the Terraform Configuration:
     ```
-    terraform init -backend-config="prod.backend.tfvars"
+    terraform init -backend-config="backend.prod.conf"
     ```
 2. Plan the Deployment:
     ```

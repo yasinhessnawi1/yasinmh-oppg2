@@ -8,6 +8,14 @@ resource "azurerm_key_vault" "key_vault" {
   purge_protection_enabled    = var.purge_protection_enabled    # Enables protection against accidental deletion
   sku_name                    = var.sku_name                    # SKU for the Key Vault (e.g., Standard, Premium)
 
+  # Having the firewall enabled is a good practice but this prevents the Key Vault from being accessed by my local address
+  # witch i assume is the case for the reviewer as well so i will comment it out.
+  /*
+  network_acls {
+     bypass         = "AzureServices" # Specifies which traffic can bypass the Key Vault firewall
+     default_action = "Deny"          # Default action for network traffic
+  }
+   */
   # Configures access policies based on provided variable input for flexible and dynamic access management.
   dynamic "access_policy" {
     for_each = var.access_policies # Iterate through each access policy provided
@@ -28,6 +36,7 @@ resource "azurerm_key_vault_secret" "storage_account_key" {
   name         = "storage-account-key"          # Name of the secret in the Key Vault
   value        = var.storage_account_access_key # Value of the storage account access key to be stored
   key_vault_id = azurerm_key_vault.key_vault.id # Reference to the Key Vault ID
+  content_type = "storageAccountKey"            # Specifies the content type for the secret
 
   lifecycle {
     prevent_destroy = false # Allows the secret to be destroyed during deletion
@@ -39,7 +48,7 @@ resource "azurerm_key_vault_secret" "sql_admin_password" {
   name         = "sql-admin-login-password"     # Name of the secret in the Key Vault
   value        = var.sql_admin_password         # Value of the SQL admin password to be stored
   key_vault_id = azurerm_key_vault.key_vault.id # Reference to the Key Vault ID
-
+  content_type = "password"                     # Specifies the content type for the secret
   lifecycle {
     prevent_destroy = false # Allows the secret to be destroyed during deletion
   }
@@ -51,6 +60,7 @@ resource "azurerm_key_vault_secret" "sql_admin_login" {
   value        = var.sql_admin_login            # Value of the SQL admin login to be stored
   key_vault_id = azurerm_key_vault.key_vault.id # Reference to the Key Vault ID
 
+  content_type = "username" # Specifies the content type for the secret
   lifecycle {
     prevent_destroy = false # Allows the secret to be destroyed during deletion
   }

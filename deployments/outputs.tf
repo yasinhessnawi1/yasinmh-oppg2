@@ -15,7 +15,11 @@ output "vnet_id" {
 # Outputs the ID of the website subnet within the virtual network.
 output "website_subnet_id" {
   description = "The ID of the subnet designated for hosting web applications."
-  value       = module.network.website_subnet_id
+  value       = module.network.webapp_subnet_id
+}
+
+output "webapp_url" {
+  value = module.app_service_plan.webapp_url
 }
 
 # Outputs the ID of the database subnet within the virtual network.
