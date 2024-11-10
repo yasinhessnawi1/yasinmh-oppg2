@@ -12,6 +12,7 @@ with a CI/CD pipeline powered by GitHub Actions.
 - SQL Database for storing product and user data.
 - Azure Blob Storage for storing product images.
 - Load Balancer to distribute traffic to the web application.
+- key vault for storing sensitive information like database credentials and storage account keys.
 
 ### Project structure
 The project is organized into the following directories:
@@ -20,15 +21,16 @@ The project is organized into the following directories:
 │   ├── main.tf
 │   ├── variables.tf
 │   ├── backend.tfvars
+│   ├── outputs.tf
 ├── global/
 │   ├── main.tf
 │   ├── variables.tf
-│   ├── dev.tfvars
-│   ├── staging.tfvars
-│   ├── prod.tfvars
+│   ├── outputs.tf
+│   ├── global.tfvars
 ├── deployments/
 │   ├── main.tf
 │   ├── variables.tf
+│   ├── outputs.tf
 │   ├── dev.tfvars
 │   ├── staging.tfvars
 │   ├── prod.tfvars
@@ -78,7 +80,7 @@ To prevent naming conflicts and ensure that resources are unique across environm
 This appends a random suffix to resource names, making them globally unique.
 
 ### Remote State Management
-I are using an Azure Storage Account to store Terraform state files remotely. This ensures that the state is shared among team members and remains consistent.
+I am using an Azure Storage Account to store Terraform state files remotely. This ensures that the state is shared among team members and remains consistent.
 
 ## CI/CD Pipeline with GitHub Actions
 ### Branching Strategy
